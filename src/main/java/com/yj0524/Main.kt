@@ -112,50 +112,44 @@ class Main : JavaPlugin(), Listener {
         if (e.cause == EntityDamageEvent.DamageCause.FALL) {
             if (random.nextDouble() < 0.1) {
                 if (entity is Player) {
-                    entity.addPotionEffect(PotionEffect(PotionEffectType.SLOW, e.damage.toInt() * 40, 0))
+                    entity.addPotionEffect(PotionEffect(PotionEffectType.SLOW, e.damage.toInt() * 60, 0))
                 }
             }
         }
     }
 
-    // 다이아몬드를 캤을 때 10% 확률로 다이아몬드가 청금석이 됨 (청금석의 이름은 다이아몬드로 위장한 청금석)
+    // 다이아몬드 광석을 캤을 때 10% 확률로 다이아몬드가 청금석이 됨 (청금석의 이름은 다이아몬드로 위장한 청금석)
     @EventHandler
     fun onDiamondOreBreak(event: BlockBreakEvent) {
         val block = event.block
         if (block.type == Material.DIAMOND_ORE) {
             val random = Random()
             if (random.nextDouble() < 0.1) {
-                block.type = Material.LAPIS_ORE
-                block.state.update()
-                val item = ItemStack(Material.LAPIS_LAZULI, 1)
+                event.isCancelled = true
+                val item = ItemStack(Material.LAPIS_LAZULI)
                 val meta = item.itemMeta
-                meta.setDisplayName("다이아몬드로 위장한 청금석")
-                val lore = ArrayList<String>()
-                lore.add("눈치가 너무 없어버린 청금석")
+                meta.setDisplayName("§r다이아몬드로 위장한 청금석")
                 item.itemMeta = meta
-                meta.lore = lore
                 event.player.world.dropItemNaturally(block.location, item)
+                block.type = Material.AIR
             }
         }
     }
 
-    // 철을 캤을 때 50% 확률로 철이 구리가 됨 (구리의 이름은 철로 위장한 구리)
+    // 철 광석을 캤을 때 50% 확률로 철 원석이 구리 원석이 됨 (구리 원석의 이름은 철 원석으로 위장한 구리 원석)
     @EventHandler
     fun onIronOreBreak(event: BlockBreakEvent) {
         val block = event.block
         if (block.type == Material.IRON_ORE) {
             val random = Random()
-            if (random.nextDouble() < 0.5) {
-                block.type = Material.COPPER_ORE
-                block.state.update()
-                val item = ItemStack(Material.COPPER_INGOT, 1)
+            if (random.nextDouble() < 0.2) {
+                event.isCancelled = true
+                val item = ItemStack(Material.RAW_COPPER)
                 val meta = item.itemMeta
-                meta.setDisplayName("철로 위장한 구리")
-                val lore = ArrayList<String>()
-                lore.add("눈치가 너무 없어버린 구리")
+                meta.setDisplayName("§r철 원석으로 위장한 구리 원석")
                 item.itemMeta = meta
-                meta.lore = lore
                 event.player.world.dropItemNaturally(block.location, item)
+                block.type = Material.AIR
             }
         }
     }
