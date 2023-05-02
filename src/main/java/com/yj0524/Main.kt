@@ -136,7 +136,7 @@ class Main : JavaPlugin(), Listener {
         }
     }
 
-    // 철 광석을 캤을 때 50% 확률로 철 원석이 구리 원석이 됨 (구리 원석의 이름은 철 원석으로 위장한 구리 원석)
+    // 철 광석을 캤을 때 20% 확률로 철 원석이 구리 원석이 됨 (구리 원석의 이름은 철 원석으로 위장한 구리 원석)
     @EventHandler
     fun onIronOreBreak(event: BlockBreakEvent) {
         val block = event.block
