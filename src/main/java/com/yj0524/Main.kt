@@ -89,7 +89,7 @@ open class Main : JavaPlugin(), Listener {
                 }
                 then("config") {
                     executes {
-                        sender.sendMessage("§c사용법 : /eogkka config <type> <value>")
+                        sender.sendMessage("§c사용법 : /eogkka config <type> [value]")
                     }
                     then("banmode") {
                         executes {
