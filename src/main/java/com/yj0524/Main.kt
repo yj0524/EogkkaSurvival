@@ -93,29 +93,31 @@ open class Main : JavaPlugin(), Listener {
                     }
                     then("banmode") {
                         executes {
-                            sender.sendMessage("§c사용법 : /eogkka config banmode <bool>")
+                            sender.sendMessage("밴 모드 : $banMode")
                         }
                         then("bool" to bool()) {
                             executes {
                                 val bool: Boolean by it
 
                                 banMode = bool
-                                loadConfig()
+                                config.set("banMode", bool)
+                                saveConfig()
                                 sender.sendMessage("§a밴 모드를 $bool (으)로 설정했습니다.")
                             }
                         }
                     }
                     then("deathcount") {
                         executes {
-                            sender.sendMessage("§c사용법 : /eogkka config deathcount <int>")
+                            sender.sendMessage("억까당한 횟수 : $deathCount" + "번")
                         }
                         then("int" to int()) {
                             executes {
                                 val int: Int by it
 
                                 deathCount = int
-                                loadConfig()
-                                sender.sendMessage("§a억까당한 횟수를 $int (으)로 설정했습니다.")
+                                config.set("deathCount", int)
+                                saveConfig()
+                                sender.sendMessage("§a억까당한 횟수를 $int" + "번 (으)로 설정했습니다.")
                             }
                         }
                     }
