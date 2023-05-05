@@ -1,6 +1,5 @@
 package com.yj0524
 
-import io.github.monun.kommand.*
 import org.bukkit.Material
 import org.bukkit.entity.Monster
 import org.bukkit.entity.Player
@@ -15,67 +14,64 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.io.File
 import java.util.*
 
-class Main : JavaPlugin(), Listener {
+
+open class Main : JavaPlugin(), Listener {
+
+    var banMode = false
+    var deathCount = 0
 
     override fun onEnable() {
         server.logger.info("Plugin Enabled")
 
-        kommandLoad()
+        // Config.yml 파일 생성
+        loadConfig()
+        val cfile = File(dataFolder, "config.yml")
+        if (cfile.length() == 0L) {
+            config.options().copyDefaults(true)
+            saveConfig()
+        }
+
+        EogkkaKommand().kommandLoad()
 
         server.pluginManager.registerEvents(this, this)
+
+        if (!banMode) {
+            server.scheduler.scheduleSyncRepeatingTask(this, {
+                for (player in server.onlinePlayers) {
+                    player.sendActionBar("§c억까당한 횟수 : $deathCount")
+                }
+            }, 0, 1)
+        }
     }
 
     override fun onDisable() {
         server.logger.info("Plugin Disabled")
     }
 
-    fun kommandLoad() {
-        val greedy = KommandArgument.string(StringType.GREEDY_PHRASE)
-
-        kommand {
-            register("eogkka") {
-                requires {
-                    isOp
-                }
-                executes {
-                    sender.sendMessage("§c사용법 : /eogkka <type>")
-                }
-                then("info") {
-                    executes {
-                        sender.sendMessage("Plugin Name : " + pluginMeta.name)
-                        sender.sendMessage("Plugin Version : " + pluginMeta.version)
-                        sender.sendMessage("Plugin API Version : " + pluginMeta.apiVersion)
-                    }
-                }
-                then("notice") {
-                    executes {
-                        sender.sendMessage("§c사용법 : /eogkka notice <message>")
-                    }
-                    then("message" to greedy) {
-                        executes {
-                            val message: String by it
-
-                            server.broadcastMessage("§a[억까 서바이벌 공지] §r" + message)
-                        }
-                    }
-                }
-                then("forcestop") {
-                    executes {
-                        server.shutdown()
-                    }
-                }
-            }
-        }
+    fun loadConfig() {
+        // Load config
+        val config = config
+        banMode = config.getBoolean("banMode", false)
+        deathCount = config.getInt("deathCount", 0)
+        // Save config
+        config.set("banMode", banMode)
+        config.set("deathCount", deathCount)
+        saveConfig()
     }
 
-    // 플레이어가 죽었다면 죽은 플레이어의 이름을 콘솔에 출력
+    // 플레이어가 죽었다면 죽은 플레이어의 이름을 출력
     @EventHandler
     fun onPlayerDeath(event: PlayerDeathEvent) {
         event.deathMessage = null
         val player = event.entity
-        event.player.banPlayer("§c억까를 이기지 못하고 사망했습니다.")
+        if (banMode) {
+            event.player.banPlayer("§c억까를 이기지 못하고 사망했습니다.")
+        } else {
+            deathCount++
+        }
         server.broadcastMessage("§c" + player.name + "이(가) 억까를 이기지 못하고 사망했습니다.")
     }
 

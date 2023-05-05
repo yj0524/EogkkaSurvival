@@ -1,6 +1,8 @@
 # EogkkaSurvival (Paper 1.19.4)
 
 ## 설명
+※ deathCount는 모든 플레이어 공통으로 표시됩니다.
+
 ```/eogkka info``` : 플러그인의 정보를 확인합니다.
 
 ```/eogkka notice <message>``` : 공지할 수 있습니다.
