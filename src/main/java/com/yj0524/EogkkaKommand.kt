@@ -53,6 +53,7 @@ class EogkkaKommand : Main() {
                                 val bool: Boolean by it
 
                                 banMode = bool
+                                loadConfig()
                                 sender.sendMessage("§a밴 모드를 $bool (으)로 설정했습니다.")
                             }
                         }
@@ -66,6 +67,7 @@ class EogkkaKommand : Main() {
                                 val int: Int by it
 
                                 deathCount = int
+                                loadConfig()
                                 sender.sendMessage("§a억까당한 횟수를 $int (으)로 설정했습니다.")
                             }
                         }
