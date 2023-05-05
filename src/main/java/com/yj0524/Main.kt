@@ -41,7 +41,7 @@ open class Main : JavaPlugin(), Listener {
         if (!banMode) {
             server.scheduler.scheduleSyncRepeatingTask(this, {
                 for (player in server.onlinePlayers) {
-                    player.sendActionBar("§c억까당한 횟수 : $deathCount")
+                    player.sendActionBar("억까당한 횟수 : $deathCount" + "번")
                 }
             }, 0, 1)
         }
